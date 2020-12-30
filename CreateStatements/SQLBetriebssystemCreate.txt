@@ -1,0 +1,3 @@
+Create TABLE "PSE1"."Betriebssystem" 
+   ("BetriebssystemID"VARCHAR2 (50 BYTE) PRIMARY KEY,
+	"Betriebssystem" VARCHAR2(50 BYTE)  ) 
