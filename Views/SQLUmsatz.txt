@@ -1,0 +1,24 @@
+
+  CREATE VIEW "PSE1"."Umsatz"  AS 
+SELECT 
+SUM("2020") AS "2020",
+SUM("2019") AS "2019",
+ROUND(SUM("2020")*SUM("2020")/SUM("2019"),2)  as "Prediction 2021",
+ROUND(SUM("2020")/SUM("2019")*100,2) as "Jährliches_Wachstum_in_Prozent"
+FROM  (SELECT  
+      "EntwicklerStudio",
+       CASE 
+            WHEN (EXTRACT(YEAR FROM "RECHNUNGSDATUM")) = 2020
+            THEN "RECHNUNGSPOSITIONSPREIS"
+            ELSE 0
+        END as "2020",
+        CASE 
+            WHEN (EXTRACT(YEAR FROM "RECHNUNGSDATUM")) = 2019
+            THEN "RECHNUNGSPOSITIONSPREIS"
+            ELSE 0
+        END as "2019"
+       FROM "RECHNUNGSPOSITION" "Rp"
+       INNER JOIN "App" on "App"."AppID" = "Rp"."APPID"
+       LEFT JOIN "RECHNUNG" "Re" on "Re"."RECHNUNGSID" = "Rp"."RECHNUNGSID"
+       WHERE "App"."EntwicklerStudio" = 'Cyan Worlds')
+       --GROUP by "2020","2019"

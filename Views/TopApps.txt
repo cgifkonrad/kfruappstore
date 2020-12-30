@@ -1,0 +1,13 @@
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PSE1"."Top_Apps" ("EntwicklerStudio", "Umsatz") AS 
+  SELECT  
+      "EntwicklerStudio",
+            SUM("RECHNUNGSPOSITIONSPREIS") AS "Umsatz"
+       FROM "RECHNUNGSPOSITION" "Rp"
+       INNER JOIN "App" on "App"."AppID" = "Rp"."APPID"
+       LEFT JOIN "RECHNUNG" "Re" on "Re"."RECHNUNGSID" = "Rp"."RECHNUNGSID"
+       WHERE EXTRACT(YEAR FROM "RECHNUNGSDATUM") = 2020
+       AND EXTRACT(MONTH FROM "RECHNUNGSDATUM") >= 5
+       AND EXTRACT(MONTH FROM "RECHNUNGSDATUM") < 6
+       GROUP BY "EntwicklerStudio"
+       ORDER BY "Umsatz" desc;
