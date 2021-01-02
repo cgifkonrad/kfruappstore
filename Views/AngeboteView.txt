@@ -1,0 +1,21 @@
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PSE1"."Angebote" ("Name", "Normalpreis", "Rabattpreis", "Erspartes", "Discount in %", "StartDatum", "EndDatum") AS 
+  SELECT  
+   "App"."ApplikationsName" as "Name", 
+   --"App"."Betriebssystem" as "OS",
+   "App"."Preis" as "Normalpreis",
+   Round("App"."Preis" *("Rabatt"."DiscountInProzent"-1)) /100 as "Rabattpreis",
+   ROUND("Rabatt"."DiscountInProzent" *"App"."Preis")/100  as "Erspartes" ,
+   "Rabatt"."DiscountInProzent" as "Discount in %",
+   "Rabatt"."DiscountStart" as "StartDatum",
+   "Rabatt"."DiscountEnd" as "EndDatum"
+
+   FROM "App"
+   JOIN "Rabatt"  on "Rabatt"."AppID" = "App"."AppID" 
+   where  extract(year from "Rabatt"."DiscountStart") =2020
+   and extract(month from "Rabatt"."DiscountStart") =11
+   and extract(day from "Rabatt"."DiscountStart") <18
+   and extract(day from "Rabatt"."DiscountEnd") >18
+   and "App"."Preis" <> 0
+
+   ORDER BY "Erspartes" desc;

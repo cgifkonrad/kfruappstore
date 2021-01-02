@@ -1,0 +1,13 @@
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PSE1"."Kategorie" ("Kategorie", "Betriebssystem", "Anzahl_Downloads") AS 
+  SELECT  
+  "Kategorien"."Kategorie" as "Kategorie", 
+  "Betriebssystem"."Betriebssystem" AS "Betriebssystem" ,
+  Count(*) AS "Anzahl_Downloads"
+   FROM "Downloads"
+   LEFT JOIN "App" on "App"."AppID" = "Downloads"."AppID"
+   LEFT JOIN "Kategorien" on  "App"."KATEGORIEID" = "Kategorien"."KategorieID"
+   LEFT JOIN "Betriebssystem" on "Downloads"."BetriebssystemID" = "Betriebssystem"."BetriebssystemID"
+  WHERE EXTRACT (YEAR FROM("Downloads"."DownloadDatum")) = 2019
+  GROUP BY "Kategorie", "Betriebssystem"
+   ORDER BY "Kategorien"."Kategorie";

@@ -1,0 +1,6 @@
+Create TABLE "PSE1"."Downloads" 
+   ("DownloadID"VARCHAR2 (50 BYTE) PRIMARY KEY,
+    "DownloadDatum" DATE DEFAULT (sysdate),
+    "KundenID" VARCHAR2(50 BYTE),
+    "AppID" VARCHAR2(50 BYTE),
+    "BetriebssystemID" VARCHAR2(50 BYTE)) 

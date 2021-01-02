@@ -1,0 +1,98 @@
+CREATE VIEW "PSE1"."Persona" AS 
+  (SELECT 
+  'Vorname' as "Type",
+  "KundenVorname" as "Value",
+  count ("KundenVorname") as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   GROUP BY "KundenVorname"
+   order by "Count" desc
+   fetch next 1 rows only)
+  
+   UNION
+   
+  (SELECT 
+  'Nachname' as "Type",
+  "KundenNachname" as "Value",
+  count ("KundenNachname") as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   GROUP BY "KundenNachname"
+   order by "Count" desc
+   fetch next 1 rows only)
+   
+   UNION
+   
+    (SELECT 
+  'Geschlecht' as "Type",
+  "Geschlecht" as "Value",
+  count ("Geschlecht") as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   GROUP BY "Geschlecht"
+   order by "Count" desc
+   fetch next 1 rows only)
+   
+   UNION
+   
+     (SELECT 
+  'Durchschnittsalter' as "Type",
+  Cast(round(2020- AVG(extract(year from "Kunde"."Geburtsdatum"))) as varchar(50))  as "Value",
+  null as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   )
+   
+   UNION
+    (SELECT 
+  'Bevorzugter_Kaufmonat' as "Type",
+  CAST(extract(month from "Dl"."DownloadDatum") AS VARCHAR(50))  as "Value",
+  count(extract(month from "Kunde"."Geburtsdatum")) as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   GROUP BY   extract(month from "Dl"."DownloadDatum")
+   ORDER BY "Count" desc
+   fetch next 1 rows only
+   )
+   
+   
+   
+   UNION
+   (SELECT 
+  'Lieblingskategorie' as "Type",
+  "Lieblingskategorie" as "Value",
+  count ("KundenNachname") as "Count"
+   FROM "Downloads" "Dl"
+   LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+   LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+   WHERE "App"."ApplikationsName" = 'Telegram'
+   GROUP BY "Lieblingskategorie"
+   order by "Count" desc
+   fetch next 1 rows only)
+
+    UNION
+    
+    --muss über Rechnung
+   (Select 
+   'Durchschnittsausgaben' as "Type"
+    ,Cast(SUM("RECHNUNGSPOSITIONSPREIS")/ count(distinct("Kunde"."KundenID")) as varchar(50)) as "Value"
+    ,null as "Count"
+    FROM "Downloads" "Dl"
+    LEFT JOIN "App" on "App"."AppID" = "Dl"."AppID"
+    LEFT JOIN "Kunde" on "Kunde"."KundenID" = "Dl"."KundenID"
+    JOIN "RECHNUNG" on "Kunde"."KundenID" = "RECHNUNG"."KUNDENID"
+    JOIN "RECHNUNGSPOSITION" "Rp" on "Rp"."RECHNUNGSID" = "RECHNUNG"."RECHNUNGSID"
+    WHERE "App"."ApplikationsName" = 'Telegram'
+       );
+
+  

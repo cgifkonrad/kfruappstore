@@ -1,0 +1,4 @@
+INSERT ALL 
+ INTO "PSE1"."Betriebssystem" VALUES ('1', 'Droid') 
+  INTO "PSE1"."Betriebssystem" VALUES ('2', 'IOS')
+ select * from  dual;
