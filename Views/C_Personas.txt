@@ -1,0 +1,107 @@
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PSE1"."C_PERSONAS" ("Type", "Value", "Count") AS 
+  (SELECT 
+  'Vorname' as "Type",
+  KundenVorname as "Value",
+  count (KundenVorname) as "Count"
+   FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+   LEFT JOIN Kategorien on  App.KATEGORIEID = Kategorien.KategorieID
+   LEFT JOIN Betriebssystem on BetriebssystemKompabilität.Betriebssystem = Betriebssystem.BetriebssystemID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+   WHERE App.ApplikationsName = 'Telegram'
+   GROUP BY KundenVorname
+   order by "Count" desc
+   fetch next 1 rows only)
+  
+   UNION
+   
+  (SELECT 
+  'Nachname' as "Type",
+  KundenNachname as "Value",
+  count (KundenNachname) as "Count"
+   FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+   WHERE App.ApplikationsName = 'Telegram'
+   GROUP BY KundenNachname
+   order by "Count" desc
+   fetch next 1 rows only)
+   
+   UNION
+   
+    (SELECT 
+  'Geschlecht' as "Type",
+  Geschlecht as "Value",
+  count (Geschlecht) as "Count"
+      FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+   WHERE App.ApplikationsName = 'Telegram'
+   GROUP BY Geschlecht
+   order by "Count" desc
+   fetch next 1 rows only)
+   
+   UNION
+   
+     (SELECT 
+  'Durchschnittsalter' as "Type",
+  Cast(round(2020- AVG(extract(year from Kunde.Geburtsdatum))) as varchar(50))  as "Value",
+  null as "Count"
+   FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+   WHERE App.ApplikationsName = 'Telegram'
+   )
+   
+   UNION
+    (SELECT 
+  'Bevorzugter_Kaufmonat' as "Type",
+  CAST(extract(month from "dl".DownloadDatum) AS VARCHAR(50))  as "Value",
+  count(extract(month from Kunde.Geburtsdatum)) as "Count"
+    FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+   WHERE App.ApplikationsName = 'Telegram'
+   GROUP BY   extract(month from "dl".DownloadDatum)
+   ORDER BY "Count" desc
+   fetch next 1 rows only
+   )
+   
+   
+   
+   UNION
+   (SELECT 
+  'Lieblingskategorie' as "Type",
+  Kategorie as "Value",
+  count (KundenNachname) as "Count"
+ FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+    LEFT JOIN Kategorien on Kategorien.KategorieID = Kunde.lieblingskategorieid
+   WHERE App.ApplikationsName = 'Telegram'
+   GROUP BY Kategorie
+   order by "Count" desc
+   fetch next 1 rows only)
+
+    UNION
+    
+    --muss über Rechnung
+   (Select 
+   'Durchschnittsausgaben' as "Type"
+    ,Cast(SUM(RECHNUNGSPOSITIONSPREIS)/ count(distinct(Kunde.KundenID)) as varchar(50)) as "Value"
+    ,null as "Count"
+     FROM Downloads "dl"
+   LEFT JOIN BetriebssystemKompabilität ON BetriebssystemKompabilität.KompabilitätsID = "dl".KOMPABILITÄTSID 
+   LEFT JOIN App on App.AppID = BetriebssystemKompabilität.AppID
+    LEFT JOIN Kunde on Kunde.KundenID = "dl".KundenID
+    JOIN RECHNUNG on Kunde.KundenID = RECHNUNG.KUNDENID
+    JOIN RECHNUNGSPOSITION "Rp" on "Rp".RECHNUNGSID = RECHNUNG.RECHNUNGSID
+    WHERE App.ApplikationsName = 'Telegram'
+       );
