@@ -2,103 +2,106 @@
 -- Diese Query wird für jede der drei favorisierten Kategorien getrennt ausgeführt. Die Ergebnisse werden über Union verbunden.
 
 CREATE OR REPLACE VIEW K_DOWNLOADEMPFEHLUNGEN AS
+-- erstes Select-Statement: die zwei häufigst heruntergeladenen Apps der ersten gefundenen Kategorie
 SELECT downloadcount, kategorie, appid , appname FROM
     (
-    SELECT COUNT ("Downloads"."DownloadID" ) as downloadcount , "App".KategorieID as kategorie , "App"."AppID" as appid , "App"."ApplikationsName" as appname
-    FROM "Downloads"
-    JOIN "BetriebssystemKompabilität" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-    JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-    WHERE "BetriebssystemKompabilität"."Betriebssystem" =
+    SELECT COUNT (Downloads.DownloadID ) as downloadcount , App.KategorieID as kategorie , App.AppID as appid , App.ApplikationsName as appname
+    FROM Downloads
+    JOIN BetriebssystemKompabilität ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+    JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+    WHERE BetriebssystemKompabilität.Betriebssystem =
         (
-        SELECT  "BetriebssystemKompabilität"."Betriebssystem"
-        FROM "BetriebssystemKompabilität"
-        JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-        WHERE "Downloads"."KundenID" = 119
-        GROUP BY "BetriebssystemKompabilität"."Betriebssystem"
-        ORDER BY COUNT("BetriebssystemKompabilität"."KompabilitätsID") DESC
+        SELECT  BetriebssystemKompabilität.Betriebssystem
+        FROM BetriebssystemKompabilität
+        JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+        WHERE Downloads.KundenID = 119
+        GROUP BY BetriebssystemKompabilität.Betriebssystem
+        ORDER BY COUNT(BetriebssystemKompabilität.KompabilitätsID) DESC
         FETCH FIRST ROW ONLY
         )
-    AND "App".KategorieID =
+    AND App.KategorieID =
         (
-        SELECT "App".KategorieID
-        FROM "BetriebssystemKompabilität"
-        JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-        JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-        WHERE "Downloads"."KundenID" = 119
-        GROUP BY "App".KategorieID
-        ORDER BY "App".KategorieID ASC
+        SELECT App.KategorieID
+        FROM BetriebssystemKompabilität
+        JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+        JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+        WHERE Downloads.KundenID = 119
+        GROUP BY App.KategorieID
+        ORDER BY App.KategorieID ASC
         FETCH FIRST ROW ONLY
         )
-    GROUP BY "App"."AppID", "App".KategorieID, "App"."ApplikationsName"
-    ORDER BY COUNT ("Downloads"."DownloadID" ) DESC
+    GROUP BY App.AppID, App.KategorieID, App.ApplikationsName
+    ORDER BY COUNT (Downloads.DownloadID ) DESC
     FETCH FIRST 2 ROWS ONLY
     )
 UNION
+-- zweites Select-Statement: die zwei häufigst heruntergeladenen Apps der letzten gefundenen Kategorie
 SELECT downloadcount, kategorie, appid , appname FROM
     (
-    SELECT COUNT ("Downloads"."DownloadID" ) as downloadcount , "App".KategorieID as kategorie , "App"."AppID" as appid , "App"."ApplikationsName" as appname
-    FROM "Downloads"
-    JOIN "BetriebssystemKompabilität" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-    JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-    WHERE "BetriebssystemKompabilität"."Betriebssystem" =
+    SELECT COUNT (Downloads.DownloadID ) as downloadcount , App.KategorieID as kategorie , App.AppID as appid , App.ApplikationsName as appname
+    FROM Downloads
+    JOIN BetriebssystemKompabilität ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+    JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+    WHERE BetriebssystemKompabilität.Betriebssystem =
         (
-        SELECT  "BetriebssystemKompabilität"."Betriebssystem"
-        FROM "BetriebssystemKompabilität"
-        JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-        WHERE "Downloads"."KundenID" = 119
-        GROUP BY "BetriebssystemKompabilität"."Betriebssystem"
-        ORDER BY COUNT("BetriebssystemKompabilität"."KompabilitätsID") DESC
+        SELECT  BetriebssystemKompabilität.Betriebssystem
+        FROM BetriebssystemKompabilität
+        JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+        WHERE Downloads.KundenID = 119
+        GROUP BY BetriebssystemKompabilität.Betriebssystem
+        ORDER BY COUNT(BetriebssystemKompabilität.KompabilitätsID) DESC
         FETCH FIRST ROW ONLY
         )
-    AND "App".KategorieID =
+    AND App.KategorieID =
         
             (
-            SELECT "App".KategorieID
-            FROM "BetriebssystemKompabilität"
-            JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-            JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-            WHERE "Downloads"."KundenID" = 119
-            GROUP BY "App".KategorieID
-            ORDER BY "App".KategorieID DESC
+            SELECT App.KategorieID
+            FROM BetriebssystemKompabilität
+            JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+            JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+            WHERE Downloads.KundenID = 119
+            GROUP BY App.KategorieID
+            ORDER BY App.KategorieID DESC
             FETCH FIRST ROW ONLY
             )
-    GROUP BY "App"."AppID", "App".KategorieID , "App"."ApplikationsName"
-    ORDER BY COUNT ("Downloads"."DownloadID" ) DESC
+    GROUP BY App.AppID, App.KategorieID , App.ApplikationsName
+    ORDER BY COUNT (Downloads.DownloadID ) DESC
     FETCH FIRST 2 ROWS ONLY
     )
 
 UNION
+-- drittes Select-Statement: die zwei häufigst heruntergeladenen Apps der mittleren gefundenen Kategorie
 SELECT downloadcount, kategorie, appid , appname FROM
     (
-    SELECT COUNT ("Downloads"."DownloadID" ) as downloadcount , "App".KategorieID as kategorie , "App"."AppID" as appid , "App"."ApplikationsName" as appname
-    FROM "Downloads"
-    JOIN "BetriebssystemKompabilität" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-    JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-    WHERE "BetriebssystemKompabilität"."Betriebssystem" =
+    SELECT COUNT (Downloads.DownloadID ) as downloadcount , App.KategorieID as kategorie , App.AppID as appid , App.ApplikationsName as appname
+    FROM Downloads
+    JOIN BetriebssystemKompabilität ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+    JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+    WHERE BetriebssystemKompabilität.Betriebssystem =
         (
-        SELECT  "BetriebssystemKompabilität"."Betriebssystem"
-        FROM "BetriebssystemKompabilität"
-        JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-        WHERE "Downloads"."KundenID" = 119
-        GROUP BY "BetriebssystemKompabilität"."Betriebssystem"
-        ORDER BY COUNT("BetriebssystemKompabilität"."KompabilitätsID") DESC
+        SELECT  BetriebssystemKompabilität.Betriebssystem
+        FROM BetriebssystemKompabilität
+        JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+        WHERE Downloads.KundenID = 119
+        GROUP BY BetriebssystemKompabilität.Betriebssystem
+        ORDER BY COUNT(BetriebssystemKompabilität.KompabilitätsID) DESC
         FETCH FIRST ROW ONLY
         )
-    AND "App".KategorieID =
+    AND App.KategorieID =
         
             (
-            SELECT "App".KategorieID
-            FROM "BetriebssystemKompabilität"
-            JOIN "Downloads" ON "Downloads".kompabilitätsid = "BetriebssystemKompabilität"."KompabilitätsID"
-            JOIN "App" ON "BetriebssystemKompabilität"."AppID" = "App"."AppID"
-            WHERE "Downloads"."KundenID" = 119
-            GROUP BY "App".KategorieID
-            ORDER BY "App".KategorieID DESC
+            SELECT App.KategorieID
+            FROM BetriebssystemKompabilität
+            JOIN Downloads ON Downloads.kompabilitätsid = BetriebssystemKompabilität.KompabilitätsID
+            JOIN App ON BetriebssystemKompabilität.AppID = App.AppID
+            WHERE Downloads.KundenID = 119
+            GROUP BY App.KategorieID
+            ORDER BY App.KategorieID DESC
             OFFSET 1 ROWS
             FETCH NEXT ROW ONLY
             )
-    GROUP BY "App"."AppID", "App".KategorieID , "App"."ApplikationsName"
-    ORDER BY COUNT ("Downloads"."DownloadID" ) DESC
+    GROUP BY App.AppID, App.KategorieID , App.ApplikationsName
+    ORDER BY COUNT (Downloads.DownloadID ) DESC
     FETCH FIRST 2 ROWS ONLY
     )
 ORDER BY downloadcount DESC

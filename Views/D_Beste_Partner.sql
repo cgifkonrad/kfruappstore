@@ -16,20 +16,24 @@ FROM
         Umsatzklasse.UmsatzklassenID,
         Umsatzklasse.Umsatzklassenbezeichner,
         UMSATZKLASSE.UMSATZKLASSENPROVISION,
-        "App"."EntwicklerStudio" as Entwicklerstudio
+        App.EntwicklerStudio as Entwicklerstudio
     FROM Rechnungsposition
-    JOIN "App" On "App"."AppID" = Rechnungsposition.AppID
+    JOIN App On App.AppID = Rechnungsposition.AppID
     JOIN Rechnung ON Rechnungsposition.RechnungsID = Rechnung.RechnungsID
-    JOIN Umsatzklasse ON "App".UmsatzklassenID = Umsatzklasse.UmsatzklassenID
-    JOIN "EntwicklerStudios" ON "EntwicklerStudios"."Entwicklerstudioname" = "App"."EntwicklerStudio"
+    JOIN Umsatzklasse ON App.UmsatzklassenID = Umsatzklasse.UmsatzklassenID
+    JOIN EntwicklerStudios ON EntwicklerStudios.Entwicklerstudioname = App.EntwicklerStudio
     WHERE RECHNUNGSDATUM >= add_months( trunc(sysdate), -12 )
-    GROUP BY Rechnungsposition.AppID, Umsatzklasse.UmsatzklassenProvision, Umsatzklasse.Umsatzklassenbezeichner, Umsatzklasse.UmsatzklassenID, "App"."EntwicklerStudio"
+    GROUP BY Rechnungsposition.AppID, Umsatzklasse.UmsatzklassenProvision, Umsatzklasse.Umsatzklassenbezeichner, Umsatzklasse.UmsatzklassenID, App.EntwicklerStudio
     )
 GROUP BY Entwicklerstudio
 ORDER BY Gesamtprovsion DESC
 ;
 COMMENT ON COLUMN D_BESTPARTNERS.Durchschnittsprovision IS 'Diese Spalte gibt an, welcher Anteil des Umsatzes über alle Apps des Studios hinweg dem Storebetreiber zufließt.';
-EXIT;
+EXIT; 
+-- Skriptausführungen hier beenden. Der Rest dieses Dokuments existiert nur zu Test- und Entwicklungszwecken
+
+
+-- Teilabfragen zu Testzwecken
 
 -- Daten zu den einzelnen Apps erheben
     SELECT
