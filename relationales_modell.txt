@@ -1,0 +1,185 @@
+--------------------------------------------------------
+--  RM for Table APP
+--------------------------------------------------------
+
+APP 
+(	
+    APPID VARCHAR2(50 BYTE), 
+	APPLIKATIONSNAME VARCHAR2(50 BYTE), 
+	DOWNLOADLINK VARCHAR2(50 BYTE), 
+	VERÖFFENTLICHUNGSDATUM VARCHAR2(50 BYTE), 
+	KATEGORIEID VARCHAR2(50 BYTE), 
+	PREIS NUMBER(7,2), 
+	RABATTPREIS NUMBER(7,2), 
+	JUGENDSCHUTZKLASSE VARCHAR2(50 BYTE), 
+	VERSION VARCHAR2(50 BYTE), 
+	BETRIEBSSTATUS VARCHAR2(50 BYTE), 
+	ENTWICKLERSTUDIO VARCHAR2(100 BYTE), 
+	UMSATZKLASSENID VARCHAR2(20 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table BETRIEBSSYSTEM
+--------------------------------------------------------
+
+BETRIEBSSYSTEM
+(
+    BETRIEBSSYSTEMID VARCHAR2(50 BYTE), 
+    BETRIEBSSYSTEM VARCHAR2(50 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table BETRIEBSSYSTEMKOMPABILITÄT
+--------------------------------------------------------
+
+BETRIEBSSYSTEMKOMPABILITÄT 
+(	
+    KOMPABILITÄTSID VARCHAR2(50 BYTE), 
+	APPID VARCHAR2(50 BYTE), 
+	BETRIEBSSYSTEM VARCHAR2(50 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table BEWERTUNG
+--------------------------------------------------------
+
+BEWERTUNG
+(
+    BEWERTUNGSID VARCHAR2(20 BYTE), 
+	BEWERTUNGSANTWORTDATUM DATE, 
+	BEWERTUNGSGRAD NUMBER(1,0), 
+	BEWERTUNGSDATUM DATE, 
+	BEWERTUNGSANTWORTTEXT VARCHAR2(1000 BYTE), 
+	BEWERTUNGSTEXT VARCHAR2(1000 BYTE), 
+	RECHNUNGSPOSITIONSID VARCHAR2(20 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table DOWNLOADS
+--------------------------------------------------------
+
+DOWNLOADS
+(
+    DOWNLOADID VARCHAR2(50 BYTE), 
+	DOWNLOADDATUM DATE DEFAULT (sysdate), 
+	KUNDENID VARCHAR2(50 BYTE), 
+	KOMPABILITÄTSID VARCHAR2(50 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table ENTWICKLERSTUDIOS
+--------------------------------------------------------
+
+ENTWICKLERSTUDIOS
+(
+    ENTWICKLERSTUDIONAME VARCHAR2(100 BYTE), 
+	ENTWICKLERSTUDIOSTRASSE VARCHAR2(150 BYTE), 
+	ENTWICKLERSTUDIOHAUSNUMMER VARCHAR2(150 BYTE), 
+	ENTWICKLERSTUDIOPLZ VARCHAR2(150 BYTE), 
+	ENTWICKLERSTUDIOORTSNAME VARCHAR2(150 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table KATEGORIEN
+--------------------------------------------------------
+
+KATEGORIEN
+(
+    KATEGORIEID VARCHAR2(50 BYTE), 
+	KATEGORIE VARCHAR2(50 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table KUNDE
+--------------------------------------------------------
+
+KUNDE
+(
+    KUNDENID VARCHAR2(50 BYTE), 
+	KUNDENVORNAME VARCHAR2(50 BYTE), 
+	KUNDENNACHNAME VARCHAR2(50 BYTE), 
+	KUNDENSTRASSE VARCHAR2(150 BYTE), 
+	KUNDENHAUSNUMMER VARCHAR2(50 BYTE), 
+	KUNDENPLZ VARCHAR2(50 BYTE), 
+	KUNDENORTSNAME VARCHAR2(150 BYTE), 
+	REGISTRIERUNGSDATUM DATE DEFAULT (sysdate), 
+	GESCHLECHT VARCHAR2(1 BYTE), 
+	LIEBLINGSKATEGORIEID VARCHAR2(50 BYTE), 
+	GEBURTSDATUM DATE DEFAULT (sysdate)
+)
+
+--------------------------------------------------------
+--  RM for Table RABATT
+--------------------------------------------------------
+
+RABATT
+(
+    RABATTID VARCHAR2(50 BYTE), 
+	APPID VARCHAR2(50 BYTE), 
+	DISCOUNTSTART DATE DEFAULT (sysdate), 
+	DISCOUNTEND DATE DEFAULT (sysdate), 
+	DISCOUNTINPROZENT NUMBER(7,2)
+)
+
+--------------------------------------------------------
+--  RM for Table RECHNUNG
+--------------------------------------------------------
+
+RECHNUNG 
+(
+    RECHNUNGSID VARCHAR2(20 BYTE), 
+	RECHNUNGSDATUM DATE, 
+	RECHNUNGSFAELLIGKEITSDATUM DATE, 
+	RECHNUNGSSTRASSE VARCHAR2(50 BYTE), 
+	RECHNUNGSHAUSNUMMER VARCHAR2(10 BYTE), 
+	RECHNUNGSPLZ VARCHAR2(10 BYTE), 
+	RECHNUNGSORTSNAME VARCHAR2(50 BYTE), 
+	KUNDENID VARCHAR2(20 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table RECHNUNGSPOSITION
+--------------------------------------------------------
+
+RECHNUNGSPOSITION 
+(
+    RECHNUNGSPOSITIONSID VARCHAR2(20 BYTE), 
+	RECHNUNGSPOSITIONSPREIS NUMBER(7,2), 
+	RECHNUNGSPOSITIONSRESTBETRAG NUMBER(7,2), 
+	RECHNUNGSID VARCHAR2(20 BYTE), 
+	APPID VARCHAR2(20 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table UMSATZKLASSE
+--------------------------------------------------------
+
+UMSATZKLASSE 
+(
+    UMSATZKLASSENBEZEICHNER VARCHAR2(50 BYTE), 
+	UMSATZKLASSENID VARCHAR2(20 BYTE), 
+	UMSATZKLASSENPROVISION NUMBER(2,2), 
+	UMSATZKLASSENBESTEUERUNGSSATZ NUMBER(2,2)
+)
+
+--------------------------------------------------------
+--  RM for Table WARENKORB
+--------------------------------------------------------
+
+WARENKORB 
+(
+    ID VARCHAR2(50 BYTE), 
+	KUNDENID VARCHAR2(50 BYTE)
+)
+
+--------------------------------------------------------
+--  RM for Table WARENKORBPOSITION
+--------------------------------------------------------
+
+WARENKORBPOSITION
+(
+    ID VARCHAR2(50 BYTE), 
+	WARENKORBID VARCHAR2(50 BYTE), 
+	APPID VARCHAR2(50 BYTE)
+)
+
