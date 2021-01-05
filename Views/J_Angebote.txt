@@ -1,0 +1,21 @@
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "PSE1"."J_ANGEBOTE" ("Name", "NORMALPREIS", "Rabattpreis", "ERSPARTES", "DISCOUNT_IN_%", "STARTDATUM", "ENDDATUM") AS 
+  SELECT  
+   App.ApplikationsName as "Name", 
+   --App.Betriebssystem as "OS",
+   App.Preis as Normalpreis,
+   Round(App.Preis *(Rabatt.DiscountInProzent-1)) /100 as "Rabattpreis",
+   ROUND(Rabatt.DiscountInProzent *App.Preis)/100  as "ERSPARTES" ,
+   Rabatt.DiscountInProzent as "DISCOUNT_IN_%",
+   Rabatt.DiscountStart as "STARTDATUM",
+   Rabatt.DiscountEnd as "ENDDATUM"
+
+   FROM App
+   JOIN Rabatt  on Rabatt.AppID = App.AppID 
+   where  extract(year from Rabatt.DiscountStart) =2020
+   and extract(month from Rabatt.DiscountStart) =11
+   and extract(day from Rabatt.DiscountStart) <18
+   and extract(day from Rabatt.DiscountEnd) >18
+   and App.Preis <> 0
+
+   ORDER BY "ERSPARTES" desc;
