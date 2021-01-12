@@ -1,11 +1,11 @@
--- VIEW 4: Welche Entwicklerstudios sind die besten Partner des Unternehmens und zahlen die größte Provision
+-- VIEW 4: Welche Entwicklerstudios sind die besten Partner des Unternehmens und zahlen die grÃ¶ÃŸte Provision
 
 CREATE OR REPLACE VIEW D_BESTPARTNERS AS
 SELECT
     Entwicklerstudio,
     SUM(APPUMSATZ) AS Gesamtumsatz,
     SUM(AppProvision) AS Gesamtprovsion,
-    100 * SUM(AppProvision) / NULLIF ( SUM(APPUMSATZ),0 )  AS Durchschnittsprovision
+    100 * SUM(AppProvision) / NULLIF ( SUM(APPUMSATZ),0 ) AS Durchschnittsprovision
 FROM 
     (
     SELECT
@@ -28,9 +28,9 @@ FROM
 GROUP BY Entwicklerstudio
 ORDER BY Gesamtprovsion DESC
 ;
-COMMENT ON COLUMN D_BESTPARTNERS.Durchschnittsprovision IS 'Diese Spalte gibt an, welcher Anteil des Umsatzes über alle Apps des Studios hinweg dem Storebetreiber zufließt.';
+COMMENT ON COLUMN D_BESTPARTNERS.Durchschnittsprovision IS 'Diese Spalte gibt an, welcher Anteil des Umsatzes Ã¼ber alle Apps des Studios hinweg dem Storebetreiber zuflieÃŸt.';
 EXIT; 
--- Skriptausführungen hier beenden. Der Rest dieses Dokuments existiert nur zu Test- und Entwicklungszwecken
+-- SkriptausfÃ¼hrungen hier beenden. Der Rest dieses Dokuments existiert nur zu Test- und Entwicklungszwecken
 
 
 -- Teilabfragen zu Testzwecken
