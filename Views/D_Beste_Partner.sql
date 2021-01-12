@@ -5,7 +5,7 @@ SELECT
     Entwicklerstudio,
     SUM(APPUMSATZ) AS Gesamtumsatz,
     SUM(AppProvision) AS Gesamtprovsion,
-    100 * SUM(AppProvision) / NULLIF ( SUM(APPUMSATZ),0 ) AS Durchschnittsprovision
+    100 * SUM(AppProvision) / NULLIF ( SUM(APPUMSATZ),0 )  AS Durchschnittsprovision
 FROM 
     (
     SELECT

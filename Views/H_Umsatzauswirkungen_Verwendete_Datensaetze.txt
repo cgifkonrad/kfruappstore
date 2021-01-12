@@ -1,0 +1,22 @@
+
+Datum: 06.02.2020 während des Rabatts (Rabatt beginnt am 03.02.2020)
+AppID: 67
+App-Preis: 400 €
+Rabattpreis: 356 €
+RabattID: 202
+Rabatthöhe: 11%
+Rechnungs-IDs:
+439
+243
+143
+924
+5
+248
+505
+339
+Rechnungs-IDs vor Rabatt:
+365
+206
+486
+977
+456
